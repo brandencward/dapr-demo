@@ -1,0 +1,70 @@
+name: api2-build
+
+on:
+  push:
+    branches: [ main ]
+    paths:      
+      - DaprDemo/api2/*
+  pull_request:
+    branches: [ main ]
+    paths:      
+      - DaprDemo/api2/*
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 6.0.x
+    - name: Restore dependencies
+      working-directory: ./DaprDemo/api2
+      run: dotnet restore
+    - name: Build
+      working-directory: ./DaprDemo/api2
+      run: dotnet build -c release --no-restore
+    - name: Publish
+      working-directory: ./DaprDemo/api2
+      run: dotnet publish -o app    
+    - name: Upload a Build Artifact
+      uses: actions/upload-artifact@v3.0.0
+      with:
+        # Artifact name
+        name: daprApi2
+        # A file, directory or wildcard pattern that describes what to upload
+        path: DaprDemo/api2/app/
+        # The desired behavior if no files are found using the provided path.
+  container:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:    
+    - uses: actions/checkout@v2
+    - name: Download a Build Artifact
+      uses: actions/download-artifact@v3.0.0
+      with:
+        # Artifact name
+        name: daprApi2
+        # Destination path
+        path: DaprDemo/api2/app  
+    - name: Print Folder
+      shell: bash
+      run: |
+        pwd
+        printf "\n"
+        ls /home/runner/work/dapr-demo/dapr-demo/
+        printf "\n"
+        ls /home/runner/work/dapr-demo/dapr-demo/DaprDemo/api2/app/    
+    - name: Docker Build
+      shell: bash
+      run: |    
+        cd DaprDemo/api2
+        DOCKER_BUILDKIT=1 docker build . -t ghcr.io/brandencward/dapr-demo-api2
+    - name: Docker Publish
+      shell: bash
+      run: |
+        docker images -a
+        echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u brandencward --password-stdin
+        docker push ghcr.io/brandencward/dapr-demo-api2:latest        
