@@ -35,7 +35,7 @@ jobs:
         # Artifact name
         name: daprApi1
         # A file, directory or wildcard pattern that describes what to upload
-        path: app/
+        path: DaprDemo/api1/app/
         # The desired behavior if no files are found using the provided path.
   container:
     needs: build
