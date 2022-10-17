@@ -61,10 +61,10 @@ jobs:
       shell: bash
       run: |    
         cd DaprDemo/api1
-        DOCKER_BUILDKIT=1 docker build . -t ghcr.io/brandencward/dapr-demo
+        DOCKER_BUILDKIT=1 docker build . -t ghcr.io/brandencward/dapr-demo-api1
     - name: Docker Publish
       shell: bash
       run: |
         docker images -a
         echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u brandencward --password-stdin
-        docker push ghcr.io/brandencward/dapr-demo:latest        
+        docker push ghcr.io/brandencward/dapr-demo-api1:latest        
