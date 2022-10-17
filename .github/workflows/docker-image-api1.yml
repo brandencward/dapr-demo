@@ -48,7 +48,7 @@ jobs:
         # Artifact name
         name: daprApi1
         # Destination path
-        path: app  
+        path: DaprDemo/api1/app  
     - name: Print Folder
       shell: bash
       run: |
@@ -56,11 +56,12 @@ jobs:
         printf "\n"
         ls /home/runner/work/dapr-demo/dapr-demo/
         printf "\n"
-        ls /home/runner/work/dapr-demo/dapr-demo/app/    
+        ls /home/runner/work/dapr-demo/dapr-demo/DaprDemo/api1/app/    
     - name: Docker Build
       shell: bash
-      run: |        
-        DOCKER_BUILDKIT=1 docker build . -t ghcr.io/brandencward/dapr-demo/DaprDemo/api1
+      run: |    
+        cd DaprDemo/api1
+        DOCKER_BUILDKIT=1 docker build . -t ghcr.io/brandencward/dapr-demo
     - name: Docker Publish
       shell: bash
       run: |
