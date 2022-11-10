@@ -30,7 +30,7 @@ jobs:
       working-directory: ./DaprDemo/api2
       run: dotnet publish -o app    
     - name: Upload a Build Artifact
-      uses: actions/upload-artifact@v3.0.0
+      uses: actions/upload-artifact@v3
       with:
         # Artifact name
         name: daprApi2
